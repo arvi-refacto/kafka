@@ -25,7 +25,7 @@ Scala 2.13 is the only supported version in Apache Kafka.
 ./gradlew jar
 ```
 
-Follow instructions in https://kafka.apache.org/quickstart
+Follow the instructions in https://kafka.apache.org/quickstart
 
 ### Build source jar
 ```bash
@@ -80,9 +80,9 @@ N=500; I=0; while [ $I -lt $N ] && ./gradlew clients:test --tests RequestRespons
 ```
 
 ### Running a particular unit/integration test with log4j output
-By default, there will be only small number of logs output while testing. You can adjust it by changing the `log4j2.yaml` file in the module's `src/test/resources` directory.
+By default, there will be only a small number of logs output while testing. You can adjust it by changing the `log4j2.yaml` file in the module's `src/test/resources` directory.
 
-For example, if you want to see more logs for clients project tests, you can modify [the line](https://github.com/apache/kafka/blob/trunk/clients/src/test/resources/log4j2.yaml#L35) in `clients/src/test/resources/log4j2.yaml` 
+For example, if you want to see more logs for client project tests, you can modify [the line](https://github.com/apache/kafka/blob/trunk/clients/src/test/resources/log4j2.yaml#L35) in `clients/src/test/resources/log4j2.yaml` 
 to `level: INFO` and then run:
 
 ```bash
@@ -121,14 +121,14 @@ Core Module (:core): `core/build/reports/scoverageTest/index.html`
 
 Other Modules: `<module>/build/reports/jacoco/test/html/index.html`
 
-### Building a binary release gzipped tar ball
+### Building a binary release gzipped tarball
 ```bash
 ./gradlew clean releaseTarGz
 ```
 
 The release file can be found inside `./core/build/distributions/`.
 
-### Building auto generated messages
+### Building auto-generated messages
 Sometimes it is only necessary to rebuild the RPC auto-generated message data when switching between branches, as they could
 fail due to code changes. You can just run:
 
@@ -180,11 +180,11 @@ Streams has multiple sub-projects, but you can run all the tests:
 ./gradlew tasks
 ```
 
-### Building IDE project
-*Note Please ensure that JDK17 is used when developing Kafka.*
+### Building an IDE project
+*Note: Please ensure that JDK17 is used when developing Kafka.*
 
-IntelliJ supports Gradle natively and it will automatically check Java syntax and compatibility for each module, even if
-the Java version shown in the `Structure > Project Settings > Modules` may not be the correct one.
+IntelliJ supports Gradle natively, and it will automatically check Java syntax and compatibility for each module, even if
+The Java version shown in the `Structure > Project Settings > Modules` may not be the correct one.
 
 When it comes to Eclipse, run:
 
@@ -193,18 +193,18 @@ When it comes to Eclipse, run:
 ```
 
 The `eclipse` task has been configured to use `${project_dir}/build_eclipse` as Eclipse's build directory. Eclipse's default
-build directory (`${project_dir}/bin`) clashes with Kafka's scripts directory and we don't use Gradle's build directory
+build directory (`${project_dir}/bin`) clashes with Kafka's scripts directory, and we don't use Gradle's build directory
 to avoid known issues with this configuration.
 
-### Publishing the streams quickstart archetype artifact to maven
-For the Streams archetype project, one cannot use gradle to upload to maven; instead the `mvn deploy` command needs to be called at the quickstart folder:
+### Publishing the streams quickstart archetype artifact to Maven
+For the Streams archetype project, one cannot use Gradle to upload to Maven; instead, the `mvn deploy` command needs to be called at the quickstart folder:
 
 ```bash
 cd streams/quickstart
 mvn deploy
 ```
 
-Please note for this to work you should create/update user maven settings (typically, `${USER_HOME}/.m2/settings.xml`) to assign the following variables
+Please note that for this to work, you should create/update user maven settings (typically, `${USER_HOME}/.m2/settings.xml`) to assign the following variables
 
     <settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -245,7 +245,7 @@ Please note for this to work you should create/update user maven settings (typic
 ```
 
 ### Running code quality checks
-There are two code quality analysis tools that we regularly run, spotbugs and checkstyle.
+There are two code quality analysis tools that we regularly run, SpotBugs and Checkstyle.
 
 #### Checkstyle
 Checkstyle enforces a consistent coding style in Kafka.
@@ -260,7 +260,7 @@ subproject build directories. They are also printed to the console. The build wi
 For experiments (or regression testing purposes) add `-PcheckstyleVersion=X.y.z` switch (to override project-defined checkstyle version).
 
 #### Spotless
-The import order is a part of static check. please call `spotlessApply` to optimize the imports of Java codes before filing pull request.
+The import order is a part of the static check. Please call `spotlessApply` to optimize the imports of Java code before filing pa ull request.
 
 ```bash
 ./gradlew spotlessApply

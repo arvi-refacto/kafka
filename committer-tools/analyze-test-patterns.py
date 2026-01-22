@@ -67,8 +67,13 @@ def parse_test_result_line(line: str) -> Optional[Tuple[str, str, float]]:
             except ValueError:
                 duration = 0.0
         
-        # Reconstruct full test name
-        name_toks = toks[2:-1] + [name]
+        # Reconstruct full test name - find "Gradle Test Run" index dynamically
+        gradle_idx = next((i for i, tok in enumerate(toks) if "Gradle Test Run" in tok), None)
+        if gradle_idx is None or gradle_idx + 1 >= len(toks):
+            return None
+        
+        # Reconstruct full test name from after "Gradle Test Run" onwards
+        name_toks = toks[gradle_idx + 1:-1] + [name]
         test_name = " > ".join(name_toks)
         
         return (test_name, status, duration)
@@ -99,7 +104,12 @@ def analyze_test_patterns(log_file, min_duration: float = 0.0, status_filter: Op
     malformed_lines = 0
     skipped_tests = 0
     
-    for line in log_file.readlines():
+    try:
+        file_lines = log_file.readlines()
+    except (IOError, OSError) as e:
+        raise IOError(f"Error reading log file: {e}") from e
+    
+    for line in file_lines:
         parsed = parse_test_result_line(line)
         if parsed is None:
             if "Gradle Test Run" in line:
@@ -115,6 +125,8 @@ def analyze_test_patterns(log_file, min_duration: float = 0.0, status_filter: Op
         elif status == "SKIPPED":
             skipped_tests += 1
         elif duration >= min_duration:
+            # Note: Failed and skipped tests are intentionally excluded from slow_tests
+            # as they are tracked separately. This focuses on slow tests that are passing.
             slow_tests.append((test_name, status, duration))
     
     # Group by test class/package
@@ -233,9 +245,13 @@ Examples:
     # Write output
     output_text = "\n".join(output_lines)
     if args.output:
-        with open(args.output, "w") as f:
-            f.write(output_text)
-        print(f"Report written to {args.output}")
+        try:
+            with open(args.output, "w") as f:
+                f.write(output_text)
+            print(f"Report written to {args.output}")
+        except (IOError, OSError, PermissionError) as e:
+            print(f"Error writing output file: {e}", file=sys.stderr)
+            sys.exit(1)
     else:
         print(output_text)
     
